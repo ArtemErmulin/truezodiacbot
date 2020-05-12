@@ -1,6 +1,9 @@
+from datetime import datetime
 import os
+from pytz import timezone
 
 
+SHOWING_STRFTIME = "%H:%M %d.%m.%Y"
 HOST_URL = "https://truezodiacbot.herokuapp.com/"
 HOST_LOCAL_IP = "0.0.0.0"
 
@@ -18,3 +21,9 @@ def get_env_vars():
             BOT_TOKEN, ADMIN_ID, *_ = misk.read().split("\n")
 
     return BOT_TOKEN, ADMIN_ID
+
+
+def current_datetime():
+    current = datetime.now().astimezone(timezone("Europe/Moscow"))
+
+    return current.strftime(SHOWING_STRFTIME)

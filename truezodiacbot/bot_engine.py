@@ -1,7 +1,8 @@
 from telebot import TeleBot
 from telebot.types import ReplyKeyboardMarkup
 
-from .utils import get_env_vars
+from .utils import get_env_vars, current_datetime
+from . import reply_msg
 
 
 BOT_TOKEN, ADMIN_ID = get_env_vars()
@@ -36,12 +37,12 @@ def send_start_msg(uid):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add("Получить гороскоп")
     keyboard.row("О проекте", "Обновить")
-    start_msg = "start message"
 
     bot.send_message(
         chat_id=uid,
-        text=start_msg,
+        text=reply_msg.main_description.format(current_datetime()),
         reply_markup=keyboard,
+        parse_mode="html",
     )
 
 
@@ -51,8 +52,12 @@ def show_zodiacs(uid):
 
 
 def send_about(uid):
-    text = "about"
-    bot.send_message(chat_id=uid, text=text)
+    bot.send_message(
+        chat_id=uid,
+        text=reply_msg.about,
+        parse_mode="html",
+        disable_web_page_preview=True,
+    )
 
 
 def update_horoscope(uid):
