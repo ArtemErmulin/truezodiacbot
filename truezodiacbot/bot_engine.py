@@ -29,6 +29,10 @@ def reply(incoming_msg):
 
     elif command == "Обновить":
         update_horoscope(uid)
+
+    elif command == "Назад":
+        send_start_msg(uid)
+
     else:
         bot.send_message(chat_id=uid, text=command)
 
@@ -47,8 +51,17 @@ def send_start_msg(uid):
 
 
 def show_zodiacs(uid):
-    text = "zodiacs"
-    bot.send_message(chat_id=uid, text=text)
+    keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+
+    for i in [0, 3, 6, 9]:  # grouped by it's element (3 in each)
+        keyboard.row(*reply_msg.zodiacs[i : i + 3])
+
+    keyboard.add(reply_msg.zodiacs[-1])  # + ophiuchus
+    keyboard.add("Назад")
+
+    text = "Для какого знака зодиака будем правду узнавать?"
+
+    bot.send_message(uid, text, reply_markup=keyboard)
 
 
 def send_about(uid):
