@@ -74,5 +74,14 @@ def send_about(uid):
 
 
 def update_horoscope(uid):
-    text = "update"
-    bot.send_message(chat_id=uid, text=text)
+    update_msg = (
+        "Гороскоп обновлён!\n"
+        "Данные актуальны на:\n<b>{}</b>.\n\n<i>{}</i>"
+        "".format(current_datetime(), reply_msg.get_update_msg())
+    )
+
+    bot.send_message(
+        chat_id=uid,
+        text=update_msg,
+        parse_mode="html",
+    )
