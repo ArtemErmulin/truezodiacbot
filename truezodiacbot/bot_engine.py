@@ -1,7 +1,8 @@
 from telebot import TeleBot
 from telebot.types import ReplyKeyboardMarkup
 
-from .utils import get_env_vars, current_datetime
+from .utils import get_env_vars, current_datetime, is_zodiac
+from . import horoscope
 from . import reply_msg
 
 
@@ -33,18 +34,24 @@ def reply(incoming_msg):
     elif command == "Назад":
         send_start_msg(uid)
 
-    else:
-        bot.send_message(chat_id=uid, text=command)
+    elif is_zodiac(command):
+        zodiac = [i for i in reply_msg.zodiacs if command.lower() in i.lower()]
+        send_horoscope(uid, zodiac[0])
 
 
-def send_start_msg(uid):
+def send_start_msg(uid, text=None):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add("Получить гороскоп")
     keyboard.row("О проекте", "Обновить")
 
+    if text is None:
+        start_msg = reply_msg.main_description.format(current_datetime())
+    else:
+        start_msg = text
+
     bot.send_message(
         chat_id=uid,
-        text=reply_msg.main_description.format(current_datetime()),
+        text=start_msg,
         reply_markup=keyboard,
         parse_mode="html",
     )
@@ -85,3 +92,10 @@ def update_horoscope(uid):
         text=update_msg,
         parse_mode="html",
     )
+
+
+def send_horoscope(uid, zodiac):
+    text = horoscope.generate(zodiac)
+
+    # generate reply buttons like on '/start' command
+    send_start_msg(uid, text=text)

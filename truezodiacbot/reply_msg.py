@@ -51,6 +51,7 @@ zodiacs = [
     "♓ Рыбы",
     "⛎ Змееносец",
 ]
+min_zodiac_len = min([len(i[2:]) for i in zodiacs])
 
 planets = [
     "меркурия (Горячая штучка)",

@@ -2,6 +2,8 @@ from datetime import datetime
 import os
 from pytz import timezone
 
+from . import reply_msg
+
 
 SHOWING_STRFTIME = "%H:%M %d.%m.%Y"
 HOST_URL = "https://truezodiacbot.herokuapp.com/"
@@ -27,3 +29,10 @@ def current_datetime():
     current = datetime.now().astimezone(timezone("Europe/Moscow"))
 
     return current.strftime(SHOWING_STRFTIME)
+
+
+def is_zodiac(text):
+    return (
+        len(text) >= reply_msg.min_zodiac_len and
+        any([text.lower() in i.lower() for i in reply_msg.zodiacs])
+    )
