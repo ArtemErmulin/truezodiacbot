@@ -34,6 +34,9 @@ about = """
 
 <b>Вопросы и предложения</b>
 <i>Артем Ермулин</i> - @aermulin
+
+<b>Исходный код</b>
+<a href="https://github.com/ArtemErmulin/truezodiacbot">GitHub</a>
 """
 
 zodiacs = [
