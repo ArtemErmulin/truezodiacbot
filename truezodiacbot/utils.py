@@ -25,10 +25,10 @@ def get_env_vars():
     return BOT_TOKEN, ADMIN_ID
 
 
-def current_datetime():
+def current_datetime(strftime=SHOWING_STRFTIME, as_datetime=False):
     current = datetime.now().astimezone(timezone("Europe/Moscow"))
 
-    return current.strftime(SHOWING_STRFTIME)
+    return current if as_datetime else current.strftime(strftime)
 
 
 def is_zodiac(text):

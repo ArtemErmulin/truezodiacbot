@@ -1,7 +1,8 @@
 from telebot import TeleBot
 from telebot.types import ReplyKeyboardMarkup
 
-from .utils import get_env_vars, current_datetime, is_zodiac
+from .utils import get_env_vars, current_datetime, is_zodiac, SHOWING_STRFTIME
+from . import database
 from . import horoscope
 from . import reply_msg
 
@@ -14,11 +15,17 @@ bot.send_message(ADMIN_ID, "I'm running.")
 @bot.message_handler(commands=["start"])
 def start_message(incoming_msg):
     uid = incoming_msg.from_user.id
+
+    if database.is_new_user(uid):
+        user_check(incoming_msg.json)
+
     send_start_msg(uid)
 
 
 @bot.message_handler(content_types=["text"])
-def reply(incoming_msg):
+def reply_to_text(incoming_msg):
+    user_check(incoming_msg.json)
+
     uid = incoming_msg.from_user.id
     command = incoming_msg.text
 
@@ -39,13 +46,20 @@ def reply(incoming_msg):
         send_horoscope(uid, zodiac[0])
 
 
+def user_check(data):
+    if database.is_new_user(data["from"]["id"]):
+        database.add_user(data["from"])
+
+
 def send_start_msg(uid, text=None):
     keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
     keyboard.add("Получить гороскоп")
     keyboard.row("О проекте", "Обновить")
 
     if text is None:
-        start_msg = reply_msg.main_description.format(current_datetime())
+        start_msg = reply_msg.main_description.format(
+            database.user_update_time(uid, SHOWING_STRFTIME)
+        )
     else:
         start_msg = text
 
@@ -81,6 +95,7 @@ def send_about(uid):
 
 
 def update_horoscope(uid):
+    database.update_user_datetime(uid)
     update_msg = (
         "Гороскоп обновлён!\n"
         "Данные актуальны на:\n<b>{}</b>.\n\n<i>{}</i>"
@@ -96,6 +111,17 @@ def update_horoscope(uid):
 
 def send_horoscope(uid, zodiac):
     text = horoscope.generate(zodiac)
+
+    if database.request_too_often(uid, zodiac):
+        text = (
+            "Обновлено!"
+            + "\n\n"
+            + text
+        )
+    else:
+        database.reset_user_requests(uid)
+
+    database.update_user_horoscope_request(uid, zodiac)
 
     # generate reply buttons like on '/start' command
     send_start_msg(uid, text=text)
