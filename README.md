@@ -1,5 +1,7 @@
 # 🔮 TrueZodiacBot
 
+[![CodeFactor](https://www.codefactor.io/repository/github/artemermulin/truezodiacbot/badge)](https://www.codefactor.io/repository/github/artemermulin/truezodiacbot)
+
 Телеграм бот, для получения гороскопа на каждый день.
 
 **Попробовать: [@TrueZodiacbot](https://t.me/truezodiacbot)**
