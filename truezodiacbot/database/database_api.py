@@ -118,7 +118,6 @@ def user_update_time(uid, strftime=None):
 
 
 def user_request_time(uid):
-    current = current_datetime(as_datetime=True).replace(tzinfo=None)
     request_time_str = [
         i["last_horoscope_request"] for i in get_users() if i["id"] == uid
     ][0]

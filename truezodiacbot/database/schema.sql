@@ -7,6 +7,7 @@ CREATE TABLE users (
     "last_name" TEXT,
     "username" TEXT NOT NULL UNIQUE,
     "language_code" TEXT,
+    "is_premium" BOOLEAN,
     "last_update" TEXT,
     "last_horoscope_request" TEXT,
     "♈ Овен" INTEGER DEFAULT 0,

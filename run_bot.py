@@ -26,7 +26,8 @@ if running_from_heroku():
         bot.set_webhook(url=HOST_URL + BOT_TOKEN)
         return "Webhooks activated!", 200
 
-    server.run(host=HOST_LOCAL_IP, port=os.environ.get("PORT", 80))
+    port = int(os.environ.get("PORT", 80))
+    server.run(host=HOST_LOCAL_IP, port=port)
 
 else:
     bot.remove_webhook()

@@ -1,3 +1,4 @@
+from typing import Tuple
 from datetime import datetime
 import os
 from pytz import timezone
@@ -14,13 +15,17 @@ def running_from_heroku():
     return "BOT_TOKEN" in list(os.environ.keys())
 
 
-def get_env_vars():
+def get_env_vars() -> Tuple[str, str]:
     if running_from_heroku():
         BOT_TOKEN = os.environ.get("BOT_TOKEN")
         ADMIN_ID = os.environ.get("ADMIN_ID")
+
     else:
         with open("misk") as misk:
             BOT_TOKEN, ADMIN_ID, *_ = misk.read().split("\n")
+
+    if not BOT_TOKEN or not ADMIN_ID:
+        raise ValueError("BOT_TOKEN or ADMIN_ID is not set")
 
     return BOT_TOKEN, ADMIN_ID
 
